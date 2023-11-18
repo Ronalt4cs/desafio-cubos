@@ -15,8 +15,8 @@ export class FakeUsersRepository implements UsersRepository {
     return user
   }
 
-  async getByEmail(email: string) {
-    const user = this.items.find((item) => item.email === email)
+  async getByDocument(document: string) {
+    const user = this.items.find((item) => item.document === document)
 
     if (!user) {
       return null
@@ -29,9 +29,10 @@ export class FakeUsersRepository implements UsersRepository {
     const user = {
       id: randomUUID(),
       name: data.name,
-      email: data.email,
-      password_hash: data.password_hash,
-      created_at: new Date(),
+      document: data.document,
+      password: data.password,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     }
 
     this.items.push(user)

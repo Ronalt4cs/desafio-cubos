@@ -13,10 +13,10 @@ export class PrismaUsersRepository implements UsersRepository {
     return user
   }
 
-  async getByEmail(email: string) {
+  async getByDocument(document: string) {
     const user = await prisma.user.findUnique({
       where: {
-        email,
+        document,
       },
     })
 
