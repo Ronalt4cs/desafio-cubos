@@ -2,10 +2,12 @@ import { UsersRepository } from '@/repositories/users-repository'
 import { hash } from 'bcryptjs'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 import { User } from '@prisma/client'
+import { validateDocument } from '@/utils/validate-documents'
+import { InvalidateDocumentError } from './errors/invalidate-document-error'
 
 interface RegisterUserServiceRequest {
   name: string
-  email: string
+  document: string
   password: string
 }
 
@@ -16,22 +18,30 @@ export class RegisterUserService {
   constructor(private usersRepository: UsersRepository) { }
 
   async execute({
-    email,
+    document,
     name,
     password,
   }: RegisterUserServiceRequest): Promise<RegisterUserServiceResponse> {
-    const password_hash = await hash(password, 6)
+    const passwordHash = await hash(password, 6)
 
-    const userWithSameEmail = await this.usersRepository.getByEmail(email)
+    const isDocumentValid = validateDocument(document)
 
-    if (userWithSameEmail) {
+    if (!isDocumentValid) {
+      throw new InvalidateDocumentError()
+    }
+
+    const documentWithoutFormatting = document.replace(/\D/g, '')
+
+    const userWithSamedocument = await this.usersRepository.getByDocument(documentWithoutFormatting)
+
+    if (userWithSamedocument) {
       throw new UserAlreadyExistsError()
     }
 
     const user = await this.usersRepository.create({
-      email,
       name,
-      password_hash,
+      document: documentWithoutFormatting,
+      password: passwordHash,
     })
 
     return {
