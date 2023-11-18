@@ -4,20 +4,31 @@ import { RegisterUserService } from './register-user'
 
 import { FakeUsersRepository } from '@/repositories/fakes/fake-users-repository'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
+import { InvalidateDocumentError } from './errors/invalidate-document-error'
 
 let usersRepository: FakeUsersRepository
 let sut: RegisterUserService
 
-describe('Register Service', () => {
+describe('Register user Service', () => {
   beforeEach(() => {
     usersRepository = new FakeUsersRepository()
     sut = new RegisterUserService(usersRepository)
   })
 
-  it('should be able to register', async () => {
+  it('should be able to register with cpf', async () => {
     const { user } = await sut.execute({
       name: 'fake user',
-      email: 'fake@email.com',
+      document: '569.679.155-76',
+      password: '123456',
+    })
+
+    expect(user.id).toEqual(expect.any(String))
+  })
+
+  it('should be able to register with cnpj', async () => {
+    const { user } = await sut.execute({
+      name: 'fake user',
+      document: '56.679.155/1234-76',
       password: '123456',
     })
 
@@ -27,31 +38,41 @@ describe('Register Service', () => {
   it('should hash user password upon registration', async () => {
     const { user } = await sut.execute({
       name: 'fake user',
-      email: 'fake@email.com',
+      document: '569.679.155-76',
       password: '123456',
     })
 
     const isPasswordCorrectlyHashed = await compare(
       '123456',
-      user.password_hash,
+      user.password,
     )
 
     expect(isPasswordCorrectlyHashed).toBe(true)
   })
 
-  it('should not be able to register with same email twice', async () => {
-    const email = 'fake@email.com'
+  it('should not be able to register with invalid document', async () => {
+    expect(async () =>
+      await sut.execute({
+        name: 'fake user 2',
+        document: '569.679.155-1',
+        password: '123456',
+      }),
+    ).rejects.toBeInstanceOf(InvalidateDocumentError)
+  })
+
+  it('should not be able to register with same document twice', async () => {
+    const document = '569.679.155-76'
 
     await sut.execute({
       name: 'fake user',
-      email,
+      document,
       password: '123456',
     })
 
-    await expect(() =>
-      sut.execute({
+    expect(async () =>
+      await sut.execute({
         name: 'fake user 2',
-        email,
+        document,
         password: '123456',
       }),
     ).rejects.toBeInstanceOf(UserAlreadyExistsError)
