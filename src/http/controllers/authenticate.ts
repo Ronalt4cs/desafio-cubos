@@ -1,11 +1,11 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-import { z } from 'zod'
+import { Request, Response, } from 'express'
 import { InvalidateCredentialsError } from '@/services/errors/invalidate-credentials-error'
 import { MakeAuthenticateService } from '@/services/factories/make-authenticate-service'
+import { z } from 'zod'
 
-export async function login(
-  request: FastifyRequest,
-  reply: FastifyReply,
+export async function authenticate(
+  request: Request,
+  response: Response,
 ) {
   const registerBodySchema = z.object({
     email: z.string().email(),
@@ -22,11 +22,11 @@ export async function login(
     })
   } catch (error) {
     if (error instanceof InvalidateCredentialsError) {
-      return reply.status(409).send({ message: error.message })
+      return response.status(409).send({ message: error.message })
     }
 
     throw error
   }
 
-  return reply.status(201).send()
+  return response.status(201).send()
 }

@@ -1,24 +1,18 @@
-import fastify from 'fastify'
+import express, { Response } from 'express'
 import { appRoutes } from './http/routes'
 import { ZodError } from 'zod'
-import { env } from './env'
 
-export const app = fastify()
+export const app = express()
 
-app.register(appRoutes)
+app.use(appRoutes)
 
-app.setErrorHandler((error, _, reply) => {
+app.use((error: any, response: Response) => {
   if (error instanceof ZodError) {
-    return reply
-      .status(400)
-      .send({ message: 'Validation error', issues: error.format() })
+    return response.status(400).send({
+      message: 'Validation error',
+      issues: error.format(),
+    })
   }
 
-  if (env.NODE_ENV !== 'production') {
-    console.error(error)
-  } else {
-    // ToDo: Here we should log to an external tool like DataDog/NewRelic/Sentry
-  }
-
-  return reply.status(500).send({ message: 'Internal server error.' })
+  return response.status(500).send({ message: 'Internal server error.' })
 })
