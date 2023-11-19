@@ -5,3 +5,8 @@ export const registerUserBodySchema = z.object({
   document: z.string(),
   password: z.string().min(6),
 })
+
+export const authenticateBodySchema = z.object({
+  document: z.string(),
+  password: z.string().min(6),
+})
