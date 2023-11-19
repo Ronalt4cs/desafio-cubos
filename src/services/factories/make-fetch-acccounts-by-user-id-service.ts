@@ -1,4 +1,4 @@
-import { PrismaAccountsRepository } from '@/repositories/prisma/prisma-account-repository'
+import { PrismaAccountsRepository } from '@/repositories/prisma/prisma-accounts-repository'
 import { FetchAccountsByUserIdService } from '../fetch-accounts-by-user-id'
 
 export function MakeFetchAccountsByUserIdService() {
