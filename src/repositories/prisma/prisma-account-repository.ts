@@ -13,6 +13,29 @@ export class PrismaAccountsRepository implements AccountsRepository {
     return account
   }
 
+  async fetchByUserId(data: { userId: string, currentPage: number, itemsPerPage: number }) {
+    const skip = (data.currentPage - 1) * data.itemsPerPage
+    const take = data.itemsPerPage
+
+    const accountsInfos = await prisma.$transaction([
+      prisma.account.count({
+        where: {
+          userId: data.userId
+        }
+      }),
+      prisma.account.findMany({
+        where: {
+          userId: data.userId
+        }
+      })
+    ])
+
+    const totalCount = accountsInfos[0]
+    const accounts = accountsInfos[1]
+
+    return { accounts, totalCount }
+  }
+
   async create(data: Prisma.AccountUncheckedCreateInput) {
     const account = await prisma.account.create({
       data
