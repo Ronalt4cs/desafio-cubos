@@ -3,6 +3,7 @@ import { RegisterAccountService } from './register-account'
 import { FakeAccountsRepository } from '@/repositories/fakes/fake-accounts-repository'
 import { InvalidateBranchError } from './errors/invalidate-branch-error'
 import { InvalidateAccountNumberError } from './errors/invalidate-account-number-error'
+import { AccountAlreadyExistsError } from './errors/account-already-exists-error'
 
 let sut: RegisterAccountService
 let accountsRepository: FakeAccountsRepository
@@ -42,5 +43,23 @@ describe('Register Accounts Service', () => {
         userId: 'fakeId'
       })
     }).rejects.toBeInstanceOf(InvalidateAccountNumberError)
+  })
+
+  it('Should not be able to register an account with same account number twice', async () => {
+    const account = '12345678'
+
+    await sut.execute({
+      branch: '001',
+      account,
+      userId: 'fakeId'
+    })
+
+    expect(async () => {
+      await sut.execute({
+        branch: '001',
+        account,
+        userId: 'fakeId'
+      })
+    }).rejects.toBeInstanceOf(AccountAlreadyExistsError)
   })
 })
