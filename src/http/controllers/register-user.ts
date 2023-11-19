@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { UserAlreadyExistsError } from '@/services/errors/user-already-exists-error'
-import { makeRegisterUserService } from '@/services/factories/make-register-service'
+import { makeRegisterUserService } from '@/services/factories/make-register-user-service'
 import { registerUserBodySchema } from '../schemas/users-schemas'
 import { InvalidateDocumentError } from '@/services/errors/invalidate-document-error'
 
