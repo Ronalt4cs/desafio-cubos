@@ -17,6 +17,18 @@ export class FakeAccountsRepository implements AccountsRepository {
     return account
   }
 
+  async fetchByUserId(data: { userId: string, currentPage: number, itemsPerPage: number }) {
+    const accountsFounded = this.items.filter(item => {
+      return item.userId === data.userId
+    })
+
+    const totalCount = accountsFounded.length
+    const skip = (data.currentPage - 1) * data.itemsPerPage
+    const accounts = accountsFounded.slice(skip, data.itemsPerPage)
+
+    return { accounts, totalCount }
+  }
+
   async create(data: Prisma.AccountUncheckedCreateInput) {
     const account = {
       id: randomUUID(),
