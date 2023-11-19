@@ -15,7 +15,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  Account Account[]
+  accounts Account[]
+  cards    Card[]
 
   @@map("users")
 }
@@ -30,5 +31,29 @@ model Account {
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
 
+  cards Card[]
+
   @@map("accounts")
+}
+
+enum CardType {
+  virtual
+  physical
+}
+
+model Card {
+  id        String   @id @default(uuid())
+  type      CardType
+  number    String   @unique
+  cvv       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@map("cards")
 }
