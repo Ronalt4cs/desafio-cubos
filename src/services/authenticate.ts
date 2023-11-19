@@ -4,7 +4,7 @@ import { InvalidateCredentialsError } from './errors/invalidate-credentials-erro
 import { compare } from 'bcryptjs'
 
 interface AuthenticateServiceRequest {
-  email: string
+  document: string
   password: string
 }
 
@@ -16,16 +16,16 @@ export class AuthenticateService {
   constructor(private usersRepository: UsersRepository) { }
 
   async execute({
-    email,
+    document,
     password,
   }: AuthenticateServiceRequest): Promise<AuthenticateServiceResponse> {
-    const user = await this.usersRepository.getByEmail(email)
+    const user = await this.usersRepository.getByDocument(document)
 
     if (!user) {
       throw new InvalidateCredentialsError()
     }
 
-    const doesPasswordMatches = await compare(password, user.password_hash)
+    const doesPasswordMatches = await compare(password, user.password)
 
     if (!doesPasswordMatches) {
       throw new InvalidateCredentialsError()
