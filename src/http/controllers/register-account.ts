@@ -17,7 +17,7 @@ export async function registerAccount(request: Request, response: Response) {
       userId
     })
 
-    return response.status(200).send(accountRegistered)
+    return response.status(201).send(accountRegistered)
 
   } catch (error) {
     if (error instanceof InvalidateAccountNumberError || error instanceof InvalidateAccountNumberError) {
