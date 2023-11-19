@@ -19,7 +19,9 @@ export class AuthenticateService {
     document,
     password,
   }: AuthenticateServiceRequest): Promise<AuthenticateServiceResponse> {
-    const user = await this.usersRepository.getByDocument(document)
+    const documentWithoutFormatting = document.replace(/\D/g, '')
+
+    const user = await this.usersRepository.getByDocument(documentWithoutFormatting)
 
     if (!user) {
       throw new InvalidateCredentialsError()
