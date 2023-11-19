@@ -24,15 +24,15 @@ describe('Fetch accounts by user id service', () => {
   })
 
   it('Should be able to fetch accounts for an user', async () => {
-    const { accounts, currentPage, itemsPerPage, pageCount, totalCount } = await sut.execute({
+    const { accounts, pagination } = await sut.execute({
       userId: '123',
     })
 
     expect(accounts).toHaveLength(2)
-    expect(itemsPerPage).toEqual(10)
-    expect(currentPage).toEqual(1)
-    expect(totalCount).toEqual(2)
-    expect(pageCount).toEqual(1)
+    expect(pagination.itemsPerPage).toEqual(10)
+    expect(pagination.currentPage).toEqual(1)
+    expect(pagination.totalCount).toEqual(2)
+    expect(pagination.pageCount).toEqual(1)
   })
 
   it('Should be able to fetch an empty array of accounts if user not have any one registered', async () => {

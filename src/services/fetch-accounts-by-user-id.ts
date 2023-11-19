@@ -11,10 +11,12 @@ interface FetchAccountsByUserIdServiceRequest {
 
 interface FetchAccountsByUserIdServiceResponse {
   accounts: Account[]
-  totalCount: number
-  itemsPerPage: number
-  currentPage: number
-  pageCount: number
+  pagination: {
+    totalCount: number
+    itemsPerPage: number
+    currentPage: number
+    pageCount: number
+  }
 }
 
 export class FetchAccountsByUserIdService {
@@ -42,10 +44,12 @@ export class FetchAccountsByUserIdService {
 
     return {
       accounts,
-      totalCount,
-      itemsPerPage: validItemsPerPage,
-      currentPage: validCurrentPage,
-      pageCount,
+      pagination: {
+        totalCount,
+        itemsPerPage: validItemsPerPage,
+        currentPage: validCurrentPage,
+        pageCount,
+      }
     }
   }
 }
