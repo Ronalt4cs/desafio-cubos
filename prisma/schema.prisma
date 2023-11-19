@@ -15,5 +15,20 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
+  Account Account[]
+
   @@map("users")
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  branch    String
+  account   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  @@map("accounts")
 }
