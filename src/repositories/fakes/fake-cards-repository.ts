@@ -29,6 +29,18 @@ export class FakeCardsRepository implements CardsRepository {
     return { cards, totalCount }
   }
 
+  async fetchByUserId(data: { userId: string, currentPage: number, itemsPerPage: number }) {
+    const cardsFounded = this.items.filter(item => {
+      return item.userId === data.userId
+    })
+
+    const totalCount = cardsFounded.length
+    const skip = (data.currentPage - 1) * data.itemsPerPage
+    const cards = cardsFounded.slice(skip, data.itemsPerPage)
+
+    return { cards, totalCount }
+  }
+
   async create(data: Prisma.CardUncheckedCreateInput) {
     const card = {
       id: randomUUID(),
