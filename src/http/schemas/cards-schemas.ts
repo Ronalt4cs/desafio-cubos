@@ -9,3 +9,8 @@ export const registerCardBodySchema = z.object({
 export const registerCardParamsSchema = z.object({
   accountId: z.string()
 })
+
+export const fetchCardsQuerySchema = z.object({
+  currentPage: z.number().positive().int().optional(),
+  itemsPerPage: z.number().positive().int().optional()
+})

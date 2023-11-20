@@ -26,7 +26,9 @@ export class PrismaAccountsRepository implements AccountsRepository {
       prisma.account.findMany({
         where: {
           userId: data.userId
-        }
+        },
+        skip,
+        take
       })
     ])
 

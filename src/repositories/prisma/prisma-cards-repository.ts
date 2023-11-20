@@ -14,6 +14,31 @@ export class PrismaCardsRepository implements CardsRepository {
     return card
   }
 
+  async fetchByAccountId(data: { accountId: string; currentPage: number; itemsPerPage: number }) {
+    const skip = (data.currentPage - 1) * data.itemsPerPage
+    const take = data.itemsPerPage
+
+    const cardsInfos = await prisma.$transaction([
+      prisma.card.count({
+        where: {
+          accountId: data.accountId
+        }
+      }),
+      prisma.card.findMany({
+        where: {
+          accountId: data.accountId
+        },
+        take,
+        skip
+      })
+    ])
+
+    const totalCount = cardsInfos[0]
+    const cards = cardsInfos[1]
+
+    return { cards, totalCount }
+  }
+
   async create(data: Prisma.CardUncheckedCreateInput) {
     const card = await prisma.card.create({
       data

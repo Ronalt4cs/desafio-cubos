@@ -52,15 +52,20 @@ export class RegisterCardService {
     }
 
     const validCvv = cvv.trim()
-    const numberFormated = number.replace(/\D/g, '').slice(-4)
+    const numberFormated = number.replace(/\D/g, '')
 
-    const card = await this.cardsRepository.create({
+    const cardRegistered = await this.cardsRepository.create({
       type,
       number: numberFormated,
       cvv: validCvv,
       accountId,
       userId
     })
+
+    const card = {
+      ...cardRegistered,
+      number: cardRegistered.number.slice(-4)
+    }
 
     return { card }
   }
