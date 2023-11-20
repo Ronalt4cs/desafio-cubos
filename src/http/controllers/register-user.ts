@@ -9,7 +9,7 @@ export async function registerUser(request: Request, response: Response) {
 
   try {
     const registerUserService = makeRegisterUserService()
-    const user = await registerUserService.execute({
+    const { user } = await registerUserService.execute({
       name,
       document,
       password,
