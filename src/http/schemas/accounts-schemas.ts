@@ -6,6 +6,6 @@ export const registerAccountBodySchema = z.object({
 })
 
 export const fetchAccountsQuerySchema = z.object({
-  currentPage: z.number().positive().int(),
-  itemsPerPage: z.number().positive().int()
+  currentPage: z.number().positive().int().optional(),
+  itemsPerPage: z.number().positive().int().optional()
 })
