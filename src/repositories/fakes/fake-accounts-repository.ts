@@ -36,6 +36,7 @@ export class FakeAccountsRepository implements AccountsRepository {
       account: data.account,
       createdAt: new Date(),
       updatedAt: new Date(),
+      balance: 0,
       userId: data.userId
     }
 
