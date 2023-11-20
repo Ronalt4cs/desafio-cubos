@@ -1,9 +1,10 @@
 import { CardsRepository } from '@/repositories/cards-repository'
 import { getTotalPages } from '@/utils/get-total-pages'
 import { Card } from '@prisma/client'
+import { ResourceNotFound } from './errors/resource-not-found'
 
 interface FetchCardsByUserIdServiceRequest {
-  userId: string
+  userId?: string
   currentPage?: number
   itemsPerPage?: number
 }
@@ -26,6 +27,10 @@ export class FetchCardsByUserIdService {
     currentPage,
     itemsPerPage
   }: FetchCardsByUserIdServiceRequest): Promise<FetchCardsByUserIdServiceResponse> {
+
+    if (!userId) {
+      throw new ResourceNotFound()
+    }
 
     const validCurrentPage = currentPage || 1
     const validItemsPerPage = itemsPerPage || 10
