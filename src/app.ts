@@ -1,18 +1,7 @@
-import express, { Response } from 'express'
-import { appRoutes } from './http/routes'
-import { ZodError } from 'zod'
+import express from 'express'
+import { routes } from './http/routes'
 
 export const app = express()
 
-app.use(appRoutes)
-
-app.use((error: any, response: Response) => {
-  if (error instanceof ZodError) {
-    return response.status(400).send({
-      message: 'Validation error',
-      issues: error.format(),
-    })
-  }
-
-  return response.status(500).send({ message: 'Internal server error.' })
-})
+app.use(express.json())
+app.use(routes)
