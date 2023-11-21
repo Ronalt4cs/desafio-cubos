@@ -9,3 +9,10 @@ export const registerTransactionsBodySchema = z.object({
   description: z.string(),
   type: z.enum(['debit', 'credit'])
 })
+
+export const fetchTransactionsQuerySchema = z.object({
+  search: z.string().optional(),
+  type: z.enum(['debit', 'credit']).optional(),
+  currentPage: z.number().positive().int().optional(),
+  itemsPerPage: z.number().positive().int().optional(),
+})
