@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 import { MakeRegisterTransactionService } from '@/services/factories/make-register-transaction-service'
-import { registerTransactionsBodySchema } from '../schemas/transactions-schemas'
+import { registerTransactionsBodySchema, registerTransactionsParamsSchema } from '../schemas/transactions-schemas'
 import { BalanceInsufficientError } from '@/services/errors/balance-insufficient-error'
 
 export async function registerTransaction(request: Request, resonse: Response) {
-  const { accountId } = request.params
+  const { accountId } = registerTransactionsParamsSchema.parse(request.params)
   const { type, value, description } = registerTransactionsBodySchema.parse(request.body)
 
   try {

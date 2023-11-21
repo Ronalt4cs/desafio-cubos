@@ -60,7 +60,7 @@ export class FakeAccountsRepository implements AccountsRepository {
 
   async create(data: Prisma.AccountUncheckedCreateInput) {
     const account = {
-      id: randomUUID(),
+      id: data.id || randomUUID(),
       branch: data.branch,
       account: data.account,
       createdAt: new Date(),
