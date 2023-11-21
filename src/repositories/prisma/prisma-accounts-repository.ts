@@ -38,6 +38,38 @@ export class PrismaAccountsRepository implements AccountsRepository {
     return { accounts, totalCount }
   }
 
+  async getAccountBalanceById(accountId: string) {
+    const account = await prisma.account.findUnique({
+      where: {
+        id: accountId
+      },
+      select: {
+        balance: true
+      }
+    })
+
+    if (!account) {
+      return null
+    }
+
+    return account.balance
+  }
+
+  async discountDebitTransactions(accountId: string, value: number) {
+    const account = await prisma.account.update({
+      where: {
+        id: accountId
+      },
+      data: {
+        balance: {
+          decrement: value
+        }
+      }
+    })
+
+    return account
+  }
+
   async create(data: Prisma.AccountUncheckedCreateInput) {
     const account = await prisma.account.create({
       data
