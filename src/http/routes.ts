@@ -9,6 +9,7 @@ import { fetchCardsByAccountId } from './controllers/fetch-cards-by-account-id'
 import { fetchCardsByUserId } from './controllers/fetch-cards-by-user-id'
 import { registerTransaction } from './controllers/register-transactions'
 import { fetchTransactionsByAccountId } from './controllers/fetch-transactions-by-account-id'
+import { getAccountBalanceById } from './controllers/get-account-balance'
 
 export async function appRoutes(app: Express) {
   app.post('/people', registerUser)
@@ -22,4 +23,5 @@ export async function appRoutes(app: Express) {
   app.get('/accounts/cards', fetchCardsByUserId)
   app.post('/accounts/:accountId/transactions', registerTransaction)
   app.get('/accounts/:accountId/transactions', fetchTransactionsByAccountId)
+  app.get('/accounts/:accountId/balance', getAccountBalanceById)
 }
