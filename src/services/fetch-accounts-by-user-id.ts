@@ -2,6 +2,7 @@ import { AccountsRepository } from '@/repositories/accounts-repository'
 import { ResourceNotFound } from './errors/resource-not-found'
 import { getTotalPages } from '@/utils/get-total-pages'
 import { Account } from '@prisma/client'
+import _default from 'vite-tsconfig-paths'
 
 interface FetchAccountsByUserIdServiceRequest {
   userId?: string
@@ -10,7 +11,7 @@ interface FetchAccountsByUserIdServiceRequest {
 }
 
 interface FetchAccountsByUserIdServiceResponse {
-  accounts: Account[]
+  accounts: Omit<Account, 'balance'>[]
   pagination: {
     totalCount: number
     itemsPerPage: number
@@ -42,8 +43,13 @@ export class FetchAccountsByUserIdService {
 
     const pageCount = getTotalPages(validItemsPerPage, accounts.length)
 
+    const accountsWithoutBalance = accounts.map(accountWithBalance => {
+      const { balance: _, ...account } = accountWithBalance
+      return account
+    })
+
     return {
-      accounts,
+      accounts: accountsWithoutBalance,
       pagination: {
         totalCount,
         itemsPerPage: validItemsPerPage,

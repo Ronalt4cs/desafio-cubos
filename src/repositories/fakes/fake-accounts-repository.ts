@@ -29,6 +29,35 @@ export class FakeAccountsRepository implements AccountsRepository {
     return { accounts, totalCount }
   }
 
+  async getAccountBalanceById(accountId: string) {
+    const account = this.items.find(item => {
+      return item.id === accountId
+    })
+
+    if (!account) {
+      return null
+    }
+
+    return account.balance
+  }
+
+  async discountDebitTransactions(accountId: string, value: number) {
+    const account = this.items.find(item => {
+      return item.id === accountId
+    })
+
+    if (!account) {
+      return null
+    }
+
+    const accountWithDiscount = {
+      ...account,
+      balance: account.balance - value
+    }
+
+    return accountWithDiscount
+  }
+
   async create(data: Prisma.AccountUncheckedCreateInput) {
     const account = {
       id: randomUUID(),
@@ -36,6 +65,7 @@ export class FakeAccountsRepository implements AccountsRepository {
       account: data.account,
       createdAt: new Date(),
       updatedAt: new Date(),
+      balance: data.balance || 0,
       userId: data.userId
     }
 

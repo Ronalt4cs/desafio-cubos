@@ -27,11 +27,13 @@ model Account {
   account   String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  balance   Int      @default(0)
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
 
-  cards Card[]
+  cards        Card[]
+  transactions Transaction[]
 
   @@map("accounts")
 }
@@ -56,4 +58,23 @@ model Card {
   userId String
 
   @@map("cards")
+}
+
+enum TransactionType {
+  credit
+  debit
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  value       Int
+  type        TransactionType
+  description String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+
+  @@map("transactions")
 }
