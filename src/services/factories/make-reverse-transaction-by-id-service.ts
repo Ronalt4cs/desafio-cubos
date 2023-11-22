@@ -13,7 +13,7 @@ interface MakeReverseTransactionByIdServiceRequest {
   description: string
 }
 
-export async function MakeReverseTransactionByIdService({
+export async function makeReverseTransactionByIdService({
   accountId,
   transactionId,
   description
@@ -43,10 +43,7 @@ export async function MakeReverseTransactionByIdService({
     type: transactionFound.type
   })
 
-
-  const inverseType = transactionReversed.type === 'credit' ? 'debit' : 'credit'
-
-  await updateAcountBalance.execute({ accountId, value: transactionReversed.value, type: inverseType })
+  await updateAcountBalance.execute({ accountId, value: transactionReversed.value, type: transactionReversed.type })
 
   const { accountId: a, reversed: b, ...transaction } = transactionReversed
 

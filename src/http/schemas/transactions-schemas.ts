@@ -16,3 +16,12 @@ export const fetchTransactionsQuerySchema = z.object({
   currentPage: z.coerce.number().positive().int().optional(),
   itemsPerPage: z.coerce.number().positive().int().optional()
 })
+
+export const reverseTransactionsParamsSchema = z.object({
+  accountId: z.string(),
+  transactionId: z.string(),
+})
+
+export const reverseTransactionsBodySchema = z.object({
+  description: z.string()
+})

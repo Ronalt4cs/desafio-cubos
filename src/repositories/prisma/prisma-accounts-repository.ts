@@ -61,9 +61,10 @@ export class PrismaAccountsRepository implements AccountsRepository {
         id: accountId
       },
       data: {
-        balance: {
-          decrement: type === 'debit' ? value : 0,
-          increment: type === 'credit' ? value : 0
+        balance: type === 'debit' ? {
+          decrement: value
+        } : {
+          increment: value
         }
       }
     })
