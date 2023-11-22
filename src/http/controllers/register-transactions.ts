@@ -9,7 +9,7 @@ export async function registerTransaction(request: Request, resonse: Response) {
 
   try {
     const makeRegisterTransactionService = MakeRegisterTransactionService()
-    const transaction = await makeRegisterTransactionService.execute({
+    const { transaction } = await makeRegisterTransactionService.execute({
       type,
       value,
       description,
