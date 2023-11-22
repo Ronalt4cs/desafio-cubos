@@ -11,6 +11,6 @@ export const registerCardParamsSchema = z.object({
 })
 
 export const fetchCardsQuerySchema = z.object({
-  currentPage: z.number().positive().int().optional(),
-  itemsPerPage: z.number().positive().int().optional()
+  currentPage: z.coerce.number().positive().int().optional(),
+  itemsPerPage: z.coerce.number().positive().int().optional()
 })
