@@ -16,4 +16,6 @@ interface FetchTransactionsResponse {
 export interface TransactionsRepository {
   create(data: Prisma.TransactionUncheckedCreateInput): Promise<Transaction>
   fetchTransactionsByAccountId(data: FetchTransactionsRequest): Promise<FetchTransactionsResponse>
+  reverseTransactionById(transactionId: string, description: string, type: $Enums.TransactionType): Promise<Transaction | null>
+  getTransactionById(transactionId: string): Promise<Transaction | null>
 }

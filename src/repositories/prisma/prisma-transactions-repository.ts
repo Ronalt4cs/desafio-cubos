@@ -53,4 +53,29 @@ export class PrismaTransactionsRepository implements TransactionsRepository {
 
     return { transactions, totalCount }
   }
+
+  async reverseTransactionById(transactionId: string, description: string, type: $Enums.TransactionType) {
+    const transaction = await prisma.transaction.update({
+      where: {
+        id: transactionId
+      },
+      data: {
+        reversed: true,
+        description,
+        type: type === 'credit' ? 'debit' : 'credit'
+      }
+    })
+
+    return transaction
+  }
+
+  async getTransactionById(transactionId: string) {
+    const transaction = await prisma.transaction.findUnique({
+      where: {
+        id: transactionId
+      }
+    })
+
+    return transaction
+  }
 }
