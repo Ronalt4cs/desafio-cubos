@@ -11,7 +11,7 @@ interface FetchTransactionsByAccountIdServiceRequest {
 }
 
 interface FetchTransactionsByAccountIdServiceResponse {
-  transactions: Transaction[]
+  transactions: Partial<Transaction>[]
   pagination: {
     totalCount: number
     itemsPerPage: number
@@ -34,7 +34,7 @@ export class FetchTransactionsByAccountIdService {
     const validCurrentPage = currentPage || 1
     const validItemsPerPage = itemsPerPage || 10
 
-    const { transactions, totalCount } = await this.transactionsRepository.fetchTransactionsByAccountId({
+    const { transactions: transactionsList, totalCount } = await this.transactionsRepository.fetchTransactionsByAccountId({
       type,
       search,
       accountId,
@@ -43,6 +43,16 @@ export class FetchTransactionsByAccountIdService {
     })
 
     const pageCount = getTotalPages(validItemsPerPage, totalCount)
+
+    const transactions = transactionsList.map(item => {
+      const { accountId: _, ...transaction } = item
+      const transactionWithValueReal = {
+        ...transaction,
+        value: transaction.value / 100
+      }
+
+      return transactionWithValueReal
+    })
 
     return {
       transactions,

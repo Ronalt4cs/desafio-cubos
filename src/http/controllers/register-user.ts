@@ -15,7 +15,7 @@ export async function registerUser(request: Request, response: Response) {
       password,
     })
 
-    return response.status(201).send({ user })
+    return response.status(201).send(user)
 
   } catch (error) {
     if (error instanceof UserAlreadyExistsError) {

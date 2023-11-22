@@ -15,7 +15,7 @@ interface RegisterCardServiceRequest {
 }
 
 interface RegisterCardServiceResponse {
-  card: Card
+  card: Partial<Card>
 }
 
 export class RegisterCardService {
@@ -62,10 +62,12 @@ export class RegisterCardService {
       userId
     })
 
-    const card = {
+    const cardWithLastFourNumber = {
       ...cardRegistered,
-      number: cardRegistered.number.slice(-4)
+      number: cardRegistered.number.slice(-4),
     }
+
+    const { accountId: a, userId: b, ...card } = cardWithLastFourNumber
 
     return { card }
   }

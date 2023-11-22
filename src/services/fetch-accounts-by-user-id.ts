@@ -11,7 +11,7 @@ interface FetchAccountsByUserIdServiceRequest {
 }
 
 interface FetchAccountsByUserIdServiceResponse {
-  accounts: Omit<Account, 'balance'>[]
+  accounts: Partial<Account>[]
   pagination: {
     totalCount: number
     itemsPerPage: number
@@ -44,7 +44,7 @@ export class FetchAccountsByUserIdService {
     const pageCount = getTotalPages(validItemsPerPage, accounts.length)
 
     const accountsWithoutBalance = accounts.map(accountWithBalance => {
-      const { balance: _, ...account } = accountWithBalance
+      const { balance: _, userId, ...account } = accountWithBalance
       return account
     })
 

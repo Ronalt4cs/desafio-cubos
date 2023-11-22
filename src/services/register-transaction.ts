@@ -11,7 +11,7 @@ interface RegisterTransactionServiceRequest {
 }
 
 interface RegisterTransactionServiceResponse {
-  transaction: Transaction
+  transaction: Partial<Transaction>
 }
 
 export class RegisterTransactionService {
@@ -41,15 +41,15 @@ export class RegisterTransactionService {
       await this.accountsRepository.discountDebitTransactions(accountId, valueInCents)
     }
 
-
-    const transaction = await this.transactionsRepository.create({
+    const transactionRegistered = await this.transactionsRepository.create({
       type,
       value: valueInCents,
       description,
       accountId,
     })
 
-    const transactionWithValue = { ...transaction, value }
+    const { accountId: _, ...transaction } = transactionRegistered
+    const transactionWithValue = { ...transaction, value: value }
 
     return { transaction: transactionWithValue }
   }

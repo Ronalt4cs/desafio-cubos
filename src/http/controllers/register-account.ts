@@ -6,12 +6,12 @@ import { ResourceNotFound } from '@/services/errors/resource-not-found'
 import { AccountAlreadyExistsError } from '@/services/errors/account-already-exists-error'
 
 export async function registerAccount(request: Request, response: Response) {
-  const { branch, account } = registerAccountBodySchema.parse(request.params)
+  const { branch, account } = registerAccountBodySchema.parse(request.body)
   const { id: userId } = request.user
 
   try {
     const makeRegisterAccountService = MakeRegisterAccountService()
-    const accountRegistered = await makeRegisterAccountService.execute({
+    const { account: accountRegistered } = await makeRegisterAccountService.execute({
       branch,
       account,
       userId

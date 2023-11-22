@@ -19,14 +19,14 @@ export class PrismaTransactionsRepository implements TransactionsRepository {
       prisma.transaction.count({
         where: {
           accountId: data.accountId,
-          OR: [{
-            type: data.type,
-          }, {
-            description: {
-              contains: data.search
-            },
-          }]
-
+          AND: {
+            OR: [{
+              type: data.type,
+              description: {
+                contains: data.search
+              },
+            }],
+          }
         },
         take,
         skip
@@ -34,14 +34,14 @@ export class PrismaTransactionsRepository implements TransactionsRepository {
       prisma.transaction.findMany({
         where: {
           accountId: data.accountId,
-          OR: [{
-            type: data.type,
-          }, {
-            description: {
-              contains: data.search
-            },
-          }]
-
+          AND: {
+            OR: [{
+              type: data.type,
+              description: {
+                contains: data.search
+              },
+            }],
+          }
         },
         take,
         skip

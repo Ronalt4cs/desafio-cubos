@@ -1,4 +1,4 @@
-import { Express } from 'express'
+import express from 'express'
 import { registerUser } from './controllers/register-user'
 import { authenticate } from './controllers/authenticate'
 import { registerAccount } from './controllers/register-account'
@@ -11,17 +11,17 @@ import { registerTransaction } from './controllers/register-transactions'
 import { fetchTransactionsByAccountId } from './controllers/fetch-transactions-by-account-id'
 import { getAccountBalanceById } from './controllers/get-account-balance'
 
-export async function appRoutes(app: Express) {
-  app.post('/people', registerUser)
-  app.post('/login', authenticate)
+export const routes = express()
 
-  app.use(jwtVerify)
-  app.post('/accounts', registerAccount)
-  app.get('/accounts', fetchAccountsByUserId)
-  app.post('/accounts/:accountId/cards', registerCard)
-  app.get('/accounts/:accountId/cards', fetchCardsByAccountId)
-  app.get('/accounts/cards', fetchCardsByUserId)
-  app.post('/accounts/:accountId/transactions', registerTransaction)
-  app.get('/accounts/:accountId/transactions', fetchTransactionsByAccountId)
-  app.get('/accounts/:accountId/balance', getAccountBalanceById)
-}
+routes.post('/people', registerUser)
+routes.post('/login', authenticate)
+
+routes.use(jwtVerify)
+routes.post('/accounts', registerAccount)
+routes.get('/accounts', fetchAccountsByUserId)
+routes.post('/accounts/:accountId/cards', registerCard)
+routes.get('/accounts/:accountId/cards', fetchCardsByAccountId)
+routes.get('/accounts/cards', fetchCardsByUserId)
+routes.post('/accounts/:accountId/transactions', registerTransaction)
+routes.get('/accounts/:accountId/transactions', fetchTransactionsByAccountId)
+routes.get('/accounts/:accountId/balance', getAccountBalanceById)

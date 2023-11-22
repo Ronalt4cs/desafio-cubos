@@ -3,6 +3,7 @@ import { InvalidateBranchError } from './errors/invalidate-branch-error'
 import { InvalidateAccountNumberError } from './errors/invalidate-account-number-error'
 import { ResourceNotFound } from './errors/resource-not-found'
 import { AccountAlreadyExistsError } from './errors/account-already-exists-error'
+import { Account } from '@prisma/client'
 
 interface RegisterAccountServiceRequest {
   branch: string
@@ -10,6 +11,9 @@ interface RegisterAccountServiceRequest {
   userId?: string
 }
 
+interface RegisterAccountServiceResponse {
+  account: Partial<Account>
+}
 export class RegisterAccountService {
   constructor(private accountsRepository: AccountsRepository) { }
 
@@ -17,7 +21,7 @@ export class RegisterAccountService {
     branch,
     account,
     userId
-  }: RegisterAccountServiceRequest) {
+  }: RegisterAccountServiceRequest): Promise<RegisterAccountServiceResponse> {
     if (!userId) {
       throw new ResourceNotFound()
     }
@@ -44,6 +48,8 @@ export class RegisterAccountService {
       userId
     })
 
-    return accountCreated
+    const { balance, userId: _, ...accountResponse } = accountCreated
+
+    return { account: accountResponse }
   }
 }

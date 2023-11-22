@@ -16,7 +16,7 @@ describe('Register Accounts Service', () => {
   })
 
   it('Should be able to register an account', async () => {
-    const account = await sut.execute({
+    const { account } = await sut.execute({
       branch: '001',
       account: '12345678',
       userId: 'fakeId'
