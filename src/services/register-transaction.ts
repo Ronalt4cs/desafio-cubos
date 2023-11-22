@@ -48,7 +48,7 @@ export class RegisterTransactionService {
       accountId,
     })
 
-    const { accountId: _, ...transaction } = transactionRegistered
+    const { accountId: a, reversed: b, ...transaction } = transactionRegistered
     const transactionWithValue = { ...transaction, value: value }
 
     return { transaction: transactionWithValue }
