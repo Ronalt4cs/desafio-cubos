@@ -1,4 +1,4 @@
-import { Account, Prisma } from '@prisma/client'
+import { $Enums, Account, Prisma } from '@prisma/client'
 
 interface FetchAccountsByUserIdResponse {
   accounts: Account[],
@@ -10,5 +10,5 @@ export interface AccountsRepository {
   getByAccountNumber(accountNumber: string): Promise<Account | null>
   fetchByUserId(data: { userId: string, currentPage: number, itemsPerPage: number }): Promise<FetchAccountsByUserIdResponse>
   getAccountBalanceById(accountId: string): Promise<number | null>
-  discountDebitTransactions(accountId: string, value: number): Promise<Account | null>
+  updateAcountBalance(accountId: string, value: number, type: $Enums.TransactionType): Promise<Account | null>
 }

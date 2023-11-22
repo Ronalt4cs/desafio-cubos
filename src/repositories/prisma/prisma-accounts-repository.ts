@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { $Enums, Prisma } from '@prisma/client';
 import { AccountsRepository } from '../accounts-repository'
 import { prisma } from '@/lib/prisma';
 
@@ -55,14 +55,16 @@ export class PrismaAccountsRepository implements AccountsRepository {
     return account.balance
   }
 
-  async discountDebitTransactions(accountId: string, value: number) {
+  async updateAcountBalance(accountId: string, value: number, type: $Enums.TransactionType) {
     const account = await prisma.account.update({
       where: {
         id: accountId
       },
       data: {
-        balance: {
+        balance: type === 'debit' ? {
           decrement: value
+        } : {
+          increment: value
         }
       }
     })
