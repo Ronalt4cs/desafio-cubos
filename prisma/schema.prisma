@@ -15,5 +15,66 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
+  accounts Account[]
+  cards    Card[]
+
   @@map("users")
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  branch    String
+  account   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  balance   Int      @default(0)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  cards        Card[]
+  transactions Transaction[]
+
+  @@map("accounts")
+}
+
+enum CardType {
+  virtual
+  physical
+}
+
+model Card {
+  id        String   @id @default(uuid())
+  type      CardType
+  number    String   @unique
+  cvv       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@map("cards")
+}
+
+enum TransactionType {
+  credit
+  debit
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  value       Int
+  type        TransactionType
+  description String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+
+  @@map("transactions")
 }
