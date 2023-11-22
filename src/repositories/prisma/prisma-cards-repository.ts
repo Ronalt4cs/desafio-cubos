@@ -64,6 +64,20 @@ export class PrismaCardsRepository implements CardsRepository {
     return { cards, totalCount }
   }
 
+  async getCardNumberAvailability(cardNumber: string) {
+    const card = await prisma.card.findUnique({
+      where: {
+        number: cardNumber
+      }
+    })
+
+    if (card) {
+      return false
+    }
+
+    return true
+  }
+
   async create(data: Prisma.CardUncheckedCreateInput) {
     const card = await prisma.card.create({
       data

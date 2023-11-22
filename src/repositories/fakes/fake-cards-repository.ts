@@ -41,6 +41,18 @@ export class FakeCardsRepository implements CardsRepository {
     return { cards, totalCount }
   }
 
+  async getCardNumberAvailability(cardNumber: string) {
+    const card = this.items.find(item => {
+      return item.number === cardNumber
+    })
+
+    if (card) {
+      return false
+    }
+
+    return true
+  }
+
   async create(data: Prisma.CardUncheckedCreateInput) {
     const card = {
       id: randomUUID(),

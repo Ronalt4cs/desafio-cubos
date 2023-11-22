@@ -3,7 +3,8 @@ import { RegisterCardService } from './register-card'
 import { FakeCardsRepository } from '@/repositories/fakes/fake-cards-repository'
 import { InvalidateCardCvvError } from './errors/invalidate-card-cvv-error'
 import { InvalidateCardNumberError } from './errors/invalidate-card-number-error'
-import { CardAlreadyExistsError } from './errors/card-already-exists-error'
+import { CardNumberAlreadyExistsError } from './errors/card-number-already-exist-error'
+import { PhysicalCardAlreadyExistsError } from './errors/physical-card-already-exists-error'
 
 let sut: RegisterCardService
 let cardsRepository: FakeCardsRepository
@@ -50,6 +51,28 @@ describe('Register cards service', () => {
     }).rejects.toBeInstanceOf(InvalidateCardNumberError)
   })
 
+  it('should not be able to register card if number already exist', async () => {
+    const number = '1111 2222 3333 4444'
+
+    await sut.execute({
+      type: 'virtual',
+      cvv: '123',
+      number,
+      accountId: 'fakeId',
+      userId: 'fakeId'
+    })
+
+    expect(async () => {
+      await sut.execute({
+        type: 'virtual',
+        cvv: '123',
+        number,
+        accountId: 'fakeId',
+        userId: 'fakeId'
+      })
+    }).rejects.toBeInstanceOf(CardNumberAlreadyExistsError)
+  })
+
   it('should not be able to register an physical card if already exist', async () => {
     const accountId = 'sameAccountId'
 
@@ -64,11 +87,11 @@ describe('Register cards service', () => {
     expect(async () => {
       await sut.execute({
         type: 'physical',
-        number: '1111 2222 3333 4444',
+        number: '1111 2222 3333 1234',
         cvv: '123',
         accountId,
         userId: 'fakeId'
       })
-    }).rejects.toBeInstanceOf(CardAlreadyExistsError)
+    }).rejects.toBeInstanceOf(PhysicalCardAlreadyExistsError)
   })
 })

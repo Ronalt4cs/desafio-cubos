@@ -10,4 +10,5 @@ export interface CardsRepository {
   getPhysicalCardsByAccountId(accountId: string): Promise<Card | null>
   fetchByAccountId(data: { accountId: string, currentPage: number, itemsPerPage: number }): Promise<FetchCardsResponse>
   fetchByUserId(data: { userId: string, currentPage: number, itemsPerPage: number }): Promise<FetchCardsResponse>
+  getCardNumberAvailability(cardNumber: string): Promise<boolean>
 }
