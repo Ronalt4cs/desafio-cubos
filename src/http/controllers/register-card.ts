@@ -5,6 +5,7 @@ import { InvalidateCardNumberError } from '@/services/errors/invalidate-card-num
 import { CardAlreadyExistsError } from '@/services/errors/card-already-exists-error'
 import { ResourceNotFound } from '@/services/errors/resource-not-found'
 import { MakeRegisterCardService } from '@/services/factories/make-register-card-service'
+import { ZodError } from 'zod'
 
 export async function registerCard(request: Request, response: Response) {
   const { id: userId } = request.user
@@ -34,6 +35,10 @@ export async function registerCard(request: Request, response: Response) {
 
     if (error instanceof CardAlreadyExistsError) {
       return response.status(409).send({ message: error.message })
+    }
+
+    if (error instanceof ZodError) {
+      return response.status(400).send({ errors: error.issues })
     }
 
     throw error

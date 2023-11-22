@@ -6,8 +6,8 @@ export const registerAccountBodySchema = z.object({
 })
 
 export const fetchAccountsQuerySchema = z.object({
-  currentPage: z.number().positive().int().optional(),
-  itemsPerPage: z.number().positive().int().optional()
+  currentPage: z.coerce.number().positive().int().optional(),
+  itemsPerPage: z.coerce.number().positive().int().optional()
 })
 
 export const getAccountBalanceParamsSchema = z.object({
