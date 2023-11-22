@@ -3,11 +3,12 @@ import { UserAlreadyExistsError } from '@/services/errors/user-already-exists-er
 import { makeRegisterUserService } from '@/services/factories/make-register-user-service'
 import { registerUserBodySchema } from '../schemas/users-schemas'
 import { InvalidateDocumentError } from '@/services/errors/invalidate-document-error'
+import { ZodError } from 'zod'
 
 export async function registerUser(request: Request, response: Response) {
-  const { document, name, password } = registerUserBodySchema.parse(request.body)
-
   try {
+    const { document, name, password } = registerUserBodySchema.parse(request.body)
+
     const registerUserService = makeRegisterUserService()
     const { user } = await registerUserService.execute({
       name,
@@ -25,6 +26,11 @@ export async function registerUser(request: Request, response: Response) {
     if (error instanceof InvalidateDocumentError) {
       return response.status(400).send({ message: error.message })
     }
+
+    if (error instanceof ZodError) {
+      return response.status(400).send({ errors: error.issues })
+    }
+
 
     throw error
   }

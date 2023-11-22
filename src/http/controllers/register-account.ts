@@ -4,12 +4,13 @@ import { InvalidateAccountNumberError } from '@/services/errors/invalidate-accou
 import { MakeRegisterAccountService } from '@/services/factories/make-register-account-service'
 import { ResourceNotFound } from '@/services/errors/resource-not-found'
 import { AccountAlreadyExistsError } from '@/services/errors/account-already-exists-error'
+import { ZodError } from 'zod'
 
 export async function registerAccount(request: Request, response: Response) {
-  const { branch, account } = registerAccountBodySchema.parse(request.body)
-  const { id: userId } = request.user
-
   try {
+    const { branch, account } = registerAccountBodySchema.parse(request.body)
+    const { id: userId } = request.user
+
     const makeRegisterAccountService = MakeRegisterAccountService()
     const { account: accountRegistered } = await makeRegisterAccountService.execute({
       branch,
@@ -30,6 +31,10 @@ export async function registerAccount(request: Request, response: Response) {
 
     if (error instanceof ResourceNotFound) {
       return response.status(404).send({ message: error.message })
+    }
+
+    if (error instanceof ZodError) {
+      return response.status(400).send({ errors: error.issues })
     }
 
     throw error
