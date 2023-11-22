@@ -38,7 +38,7 @@ export class RegisterTransactionService {
         throw new BalanceInsufficientError()
       }
 
-      await this.accountsRepository.discountDebitTransactions(accountId, valueInCents)
+      await this.accountsRepository.updateAcountBalance(accountId, valueInCents, type)
     }
 
     const transactionRegistered = await this.transactionsRepository.create({
