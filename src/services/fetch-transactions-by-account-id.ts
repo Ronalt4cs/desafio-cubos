@@ -45,7 +45,7 @@ export class FetchTransactionsByAccountIdService {
     const pageCount = getTotalPages(validItemsPerPage, totalCount)
 
     const transactions = transactionsList.map(item => {
-      const { accountId: _, ...transaction } = item
+      const { accountId: a, reversed: b, ...transaction } = item
       const transactionWithValueReal = {
         ...transaction,
         value: transaction.value / 100

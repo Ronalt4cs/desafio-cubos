@@ -31,7 +31,6 @@ export async function registerUser(request: Request, response: Response) {
       return response.status(400).send({ errors: error.issues })
     }
 
-
     throw error
   }
 }

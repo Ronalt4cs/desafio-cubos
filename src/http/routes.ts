@@ -10,6 +10,7 @@ import { fetchCardsByUserId } from './controllers/fetch-cards-by-user-id'
 import { registerTransaction } from './controllers/register-transactions'
 import { fetchTransactionsByAccountId } from './controllers/fetch-transactions-by-account-id'
 import { getAccountBalanceById } from './controllers/get-account-balance'
+import { reverseTransactionById } from './controllers/reverse-transaction-by-id'
 
 export const routes = express()
 
@@ -25,3 +26,4 @@ routes.get('/accounts/cards', fetchCardsByUserId)
 routes.post('/accounts/:accountId/transactions', registerTransaction)
 routes.get('/accounts/:accountId/transactions', fetchTransactionsByAccountId)
 routes.get('/accounts/:accountId/balance', getAccountBalanceById)
+routes.post('/accounts/:accountId/transactions/:transactionId/revert', reverseTransactionById)

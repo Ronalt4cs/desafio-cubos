@@ -1,4 +1,4 @@
-import { Account, Prisma } from '@prisma/client'
+import { $Enums, Account, Prisma } from '@prisma/client'
 import { AccountsRepository } from '../accounts-repository'
 import { randomUUID } from 'crypto'
 
@@ -41,7 +41,7 @@ export class FakeAccountsRepository implements AccountsRepository {
     return account.balance
   }
 
-  async discountDebitTransactions(accountId: string, value: number) {
+  async updateAcountBalance(accountId: string, value: number, type: $Enums.TransactionType) {
     const account = this.items.find(item => {
       return item.id === accountId
     })
@@ -52,7 +52,7 @@ export class FakeAccountsRepository implements AccountsRepository {
 
     const accountWithDiscount = {
       ...account,
-      balance: account.balance - value
+      balance: type === 'debit' ? account.balance - value : account.balance + value
     }
 
     return accountWithDiscount
