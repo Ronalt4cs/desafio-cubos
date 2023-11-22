@@ -10,7 +10,7 @@ interface FetchCardsByUserIdServiceRequest {
 }
 
 interface FetchCardsByUserIdServiceResponse {
-  cards: Card[]
+  cards: Partial<Card>[]
   pagination: {
     totalCount: number
     itemsPerPage: number
@@ -41,7 +41,9 @@ export class FetchCardsByUserIdService {
       itemsPerPage: validItemsPerPage
     })
 
-    const cards = cardsFounded.map(card => {
+    const cards = cardsFounded.map(item => {
+      const { accountId: a, userId: b, ...card } = item
+
       return {
         ...card,
         number: card.number.slice(-4)
