@@ -304,6 +304,28 @@
     }
     ```
 
+  - POST /accounts/:accountId/transactions/:transactionId/revert [Opcional]
+
+    Objetivo: Realizar a reversão de uma transação. A ação inversa deve ser realizada: caso a transação seja de crédito, deve ser feito um débito e vice-versa.
+    Request:
+
+    ```json
+    {
+      "description": "Estorno de cobrança indevida"
+    }
+    ```
+
+    Response:
+    ```json
+    {
+      "id": "092ec73f-d7c3-4afb-bac0-9c7e8eb33eae",
+      "value": 100.00,
+      "description": "Estorno de cobrança indevida.",
+      "createdAt": "2022-08-01T14:30:41.203653",
+      "updatedAt": "2022-08-01T14:30:41.203653"
+    }
+    ```
+
 ## Stack utilizada
 
 Node, Express, Prisma, Vistest, Docker
