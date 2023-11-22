@@ -1,10 +1,11 @@
 import { CardsRepository } from '@/repositories/cards-repository'
 import { $Enums, Card } from '@prisma/client'
 import { ResourceNotFound } from './errors/resource-not-found'
-import { CardAlreadyExistsError } from './errors/card-already-exists-error'
+import { PhysicalCardAlreadyExistsError } from './errors/physical-card-already-exists-error'
 import { InvalidateCardCvvError } from './errors/invalidate-card-cvv-error'
 import { validateCardNumber } from '@/utils/validate-card-number'
 import { InvalidateCardNumberError } from './errors/invalidate-card-number-error'
+import { CardNumberAlreadyExistsError } from './errors/card-number-already-exist-error'
 
 interface RegisterCardServiceRequest {
   type: $Enums.CardType
@@ -47,12 +48,18 @@ export class RegisterCardService {
       const physicalCardFound = await this.cardsRepository.getPhysicalCardsByAccountId(accountId)
 
       if (physicalCardFound) {
-        throw new CardAlreadyExistsError()
+        throw new PhysicalCardAlreadyExistsError()
       }
     }
 
     const validCvv = cvv.trim()
     const numberFormated = number.replace(/\D/g, '')
+
+    const isNumberAvailability = await this.cardsRepository.getCardNumberAvailability(numberFormated)
+
+    if (!isNumberAvailability) {
+      throw new CardNumberAlreadyExistsError()
+    }
 
     const cardRegistered = await this.cardsRepository.create({
       type,
