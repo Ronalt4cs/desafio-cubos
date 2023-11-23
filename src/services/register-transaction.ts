@@ -1,7 +1,5 @@
-import { AccountsRepository } from '@/repositories/accounts-repository'
 import { TransactionsRepository } from '@/repositories/transactions-repository'
 import { $Enums, Transaction } from '@prisma/client'
-import { BalanceInsufficientError } from './errors/balance-insufficient-error'
 
 interface RegisterTransactionServiceRequest {
   type: $Enums.TransactionType
@@ -11,14 +9,11 @@ interface RegisterTransactionServiceRequest {
 }
 
 interface RegisterTransactionServiceResponse {
-  transaction: Partial<Transaction>
+  transaction: Transaction
 }
 
 export class RegisterTransactionService {
-  constructor(
-    private transactionsRepository: TransactionsRepository,
-    private accountsRepository: AccountsRepository
-  ) { }
+  constructor(private transactionsRepository: TransactionsRepository) { }
 
   async execute({
     type,
@@ -27,30 +22,13 @@ export class RegisterTransactionService {
     accountId,
   }: RegisterTransactionServiceRequest): Promise<RegisterTransactionServiceResponse> {
 
-    const valueInCents = value * 100
-
-    if (type === 'debit') {
-      const accountBalance = await this.accountsRepository.getAccountBalanceById(accountId)
-
-      const isBalanceSuficientToTransaction = accountBalance && (accountBalance / 100) >= value
-
-      if (!isBalanceSuficientToTransaction) {
-        throw new BalanceInsufficientError()
-      }
-
-      await this.accountsRepository.updateAcountBalance(accountId, valueInCents, type)
-    }
-
-    const transactionRegistered = await this.transactionsRepository.create({
+    const transaction = await this.transactionsRepository.create({
       type,
-      value: valueInCents,
+      value,
       description,
       accountId,
     })
 
-    const { accountId: a, reversed: b, ...transaction } = transactionRegistered
-    const transactionWithValue = { ...transaction, value: value }
-
-    return { transaction: transactionWithValue }
+    return { transaction }
   }
 }
