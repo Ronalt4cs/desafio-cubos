@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { MakeRegisterTransactionService } from '@/services/factories/make-register-transaction-service'
+import { makeRegisterTransactionService } from '@/services/factories/make-register-transaction-service'
 import { registerTransactionsBodySchema, registerTransactionsParamsSchema } from '../schemas/transactions-schemas'
 import { BalanceInsufficientError } from '@/services/errors/balance-insufficient-error'
 import { ZodError } from 'zod'
@@ -9,8 +9,7 @@ export async function registerTransaction(request: Request, response: Response) 
     const { accountId } = registerTransactionsParamsSchema.parse(request.params)
     const { type, value, description } = registerTransactionsBodySchema.parse(request.body)
 
-    const makeRegisterTransactionService = MakeRegisterTransactionService()
-    const { transaction } = await makeRegisterTransactionService.execute({
+    const { transaction } = await makeRegisterTransactionService({
       type,
       value,
       description,
